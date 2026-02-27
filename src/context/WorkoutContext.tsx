@@ -10,7 +10,8 @@ type State = {
 type Action =
     | { type: "ADD_WORKOUT"; payload: Workout }
     | { type: "REMOVE_WORKOUT"; payload: string }
-    | { type: "SET_WORKOUTS"; payload: Workout[] };
+    | { type: "SET_WORKOUTS"; payload: Workout[] }
+    | { type: "CLEAR_WORKOUTS" };
 
 type WorkoutContextType = {
     state: State;
@@ -35,6 +36,11 @@ const reducer = (state: State, action: Action): State => {
             return {
                 ...state,
                 workouts: state.workouts.filter((w) => w.id !== action.payload)
+            };
+        case "CLEAR_WORKOUTS":
+            return {
+                ...state,
+                workouts: []
             };
         default:
             return state

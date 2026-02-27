@@ -1,4 +1,4 @@
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { useContext } from "react";
 import { WorkoutContext } from "../context/WorkoutContext";
 import { useNavigation } from "@react-navigation/native";
@@ -13,8 +13,30 @@ type HomeScreenNavigationProp = NativeStackNavigationProp<
 >;
 
 export default function HomeScreen() {
-  const { state } = useContext(WorkoutContext);
+  const { state, dispatch } = useContext(WorkoutContext);
   const navigation = useNavigation<HomeScreenNavigationProp>();
+
+  const handleDelete = (id: string) => {
+    dispatch({ type: "REMOVE_WORKOUT", payload: id });
+  };
+
+  const handleClearAll = () => {
+    Alert.alert(
+      "Delete All Workouts",
+      `Are you sure you want to delete all ${state.workouts.length} workout${state.workouts.length !== 1 ? "s" : ""}? This action cannot be undone.`,
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete All",
+          style: "destructive",
+          onPress: () => dispatch({ type: "CLEAR_WORKOUTS" }),
+        },
+      ]
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -35,7 +57,10 @@ export default function HomeScreen() {
           data={state.workouts}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <WorkoutCard workout={item} />
+            <WorkoutCard
+              workout={item}
+              onDelete={() => handleDelete(item.id)}
+            />
           )}
         />
       )}
@@ -48,6 +73,16 @@ export default function HomeScreen() {
         >
           <Text style={styles.addButtonText}>+ Add Workout</Text>
         </TouchableOpacity>
+        
+        {state.workouts.length > 0 && (
+          <TouchableOpacity
+            style={styles.clearButton}
+            onPress={handleClearAll}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.clearButtonText}>Delete All</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
@@ -99,5 +134,20 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     color: colors.background,
+  },
+  clearButton: {
+    marginTop: 12,
+    marginBottom: 30,
+    borderWidth: 1,
+    borderColor: colors.error,
+    borderRadius: 12,
+    padding: 12,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  clearButtonText: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: colors.error,
   },
 });
