@@ -1,22 +1,22 @@
-import { View, Text, Button } from "react-native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { useNavigation } from "@react-navigation/native";
-import { RootStackParamList } from "../navigation/AppNavigator";
-
-type HomeScreenNavigationProp = NativeStackNavigationProp<
-  RootStackParamList,
-  "Home"
->;
+import { View, Text, FlatList } from "react-native";
+import { useContext } from "react";
+import { WorkoutContext } from "../context/WorkoutContext";
 
 export default function HomeScreen() {
-  const navigation = useNavigation<HomeScreenNavigationProp>();
+  const { state } = useContext(WorkoutContext);
 
   return (
     <View>
-      <Text>Home Screen</Text>
-      <Button
-        title="Go to Add Workout"
-        onPress={() => navigation.navigate("AddWorkout")}
+      <Text>My Workouts:</Text>
+      <Text>{state.workouts.length}</Text>
+      <FlatList
+        data={state.workouts}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <Text>
+            {item.type} - {item.duration} min - {item.intensity}
+          </Text>
+        )}
       />
     </View>
   );

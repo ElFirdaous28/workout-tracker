@@ -1,5 +1,10 @@
-import AppNavigator from "./src/navigation/AppNavigator";
+import { WorkoutProvider } from "@/context/WorkoutContext";
+import AppNavigator from "@/navigation/AppNavigator";
 
 export default function App() {
-  return <AppNavigator />;
+  return (
+    <WorkoutProvider>
+      <AppNavigator />
+    </WorkoutProvider>
+  );
 }
