@@ -59,6 +59,7 @@ export default function HomeScreen() {
           renderItem={({ item }) => (
             <WorkoutCard
               workout={item}
+              onPress={() => navigation.navigate("WorkoutDetails", { id: item.id })}
               onDelete={() => handleDelete(item.id)}
             />
           )}
