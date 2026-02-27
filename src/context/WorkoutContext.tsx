@@ -1,6 +1,6 @@
 import React, { createContext, useReducer, useEffect, Children, ReactNode } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Workout } from "@/types/workout";
+import { workoutStorage } from "@/storage/workoutStorage";
 
 type State = {
     workouts: Workout[];
@@ -8,7 +8,7 @@ type State = {
 }
 
 type Action =
-    | { type: "ADD_WORKOUT"; playload: Workout }
+    | { type: "ADD_WORKOUT"; payload: Workout }
     | { type: "REMOVE_WORKOUT"; payload: string }
     | { type: "SET_WORKOUTS"; payload: Workout[] };
 
@@ -30,7 +30,7 @@ const reducer = (state: State, action: Action): State => {
         case "SET_WORKOUTS":
             return { ...state, workouts: action.payload, loading: false };
         case "ADD_WORKOUT":
-            return { ...state, workouts: [...state.workouts, action.playload] };
+            return { ...state, workouts: [...state.workouts, action.payload] };
         case "REMOVE_WORKOUT":
             return {
                 ...state,
@@ -55,24 +55,20 @@ export const WorkoutProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         const loadWorkouts = async () => {
             try {
-                const data = await AsyncStorage.getItem("@workouts");
-                if (data) {
-                    dispatch({ type: "SET_WORKOUTS", payload: JSON.parse(data) })
-                }
-                else {
-                    dispatch({ type: "SET_WORKOUTS", payload: [] })
-                }
+                const data = await workoutStorage.loadWorkouts();
+                dispatch({ type: "SET_WORKOUTS", payload: data })
             } catch (error) {
                 console.error("Failed to load workouts", error);
                 dispatch({ type: "SET_WORKOUTS", payload: [] })
             }
         }
+        loadWorkouts();
     }, [])
 
-    // save worjouts to AsyncStorage whenever they change
+    // save workouts to AsyncStorage whenever they change
     useEffect(() => {
         if (!state.loading) {
-            AsyncStorage.setItem("@workouts", JSON.stringify(state.workouts)).catch(
+            workoutStorage.saveWorkouts(state.workouts).catch(
                 (error) => console.error("Failed to save workouts", error)
             );
         }

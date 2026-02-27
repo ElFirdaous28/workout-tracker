@@ -1,14 +1,20 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useContext } from "react";
+import { View, ScrollView } from "react-native";
+import WorkoutForm from "../components/WorkoutForm";
+import { WorkoutContext } from "../context/WorkoutContext";
 
-const AddWorkoutScreen = () => {
+export default function AddWorkoutScreen({ navigation }: any) {
+  const { dispatch } = useContext(WorkoutContext);
+
+  const handleAddWorkout = (workoutData: any) => {
+    const newWorkout = { ...workoutData, id: Date.now().toString(), };
+    dispatch({ type: "ADD_WORKOUT", payload: newWorkout });
+    navigation.goBack(); // return to HomeScreen
+  };
+
   return (
-    <View>
-      <Text>AddWorkoutScreen</Text>
-    </View>
-  )
+    <ScrollView style={{ flex: 1, padding: 16 }}>
+      <WorkoutForm onSubmit={handleAddWorkout} />
+    </ScrollView>
+  );
 }
-
-export default AddWorkoutScreen
-
-const styles = StyleSheet.create({})

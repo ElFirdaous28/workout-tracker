@@ -4,15 +4,10 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "@/screens/HomeScreen";
 import AddWorkoutScreen from "@/screens/AddWorkoutScreen";
 import WorkoutDetailsScreen from "@/screens/WorkoutDetailsScreen";
+import { AppStackParamList } from "@/types";
+import { colors } from "@/theme/colors";
 
-
-export type RootStackParamList = {
-    Home: undefined;
-    AddWorkout: undefined;
-    WorkoutDetails: { id: string };
-};
-
-const Stack = createNativeStackNavigator<RootStackParamList>();
+const Stack = createNativeStackNavigator<AppStackParamList>();
 
 export default function AppNavigator() {
     return (
@@ -20,6 +15,17 @@ export default function AppNavigator() {
             <Stack.Navigator
                 screenOptions={{
                     headerTitleAlign: "center",
+                    headerStyle: {
+                        backgroundColor: colors.surface,
+                    },
+                    headerTintColor: colors.primary,
+                    headerTitleStyle: {
+                        color: colors.textPrimary,
+                        fontWeight: "bold",
+                    },
+                    contentStyle: {
+                        backgroundColor: colors.background,
+                    },
                 }}
             >
                 <Stack.Screen
