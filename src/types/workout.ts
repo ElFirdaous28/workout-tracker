@@ -8,7 +8,6 @@ export enum ActivityType {
     Running = "Running",
     Cycling = "Cycling",
     Strength = "Strength",
-    Yoga = "Yoga",
     Swimming = "Swimming",
 }
 

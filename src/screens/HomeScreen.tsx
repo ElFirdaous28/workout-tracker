@@ -1,11 +1,14 @@
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { useWorkout } from "../context/WorkoutContext";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { AppStackParamList } from "@/types";
+import { ActivityType } from "@/types/workout";
 import { useTheme } from "@/context/ThemeContext";
 import WorkoutCard from "@/components/WorkoutCard";
+import WorkoutFilter from "@/components/WorkoutFilter";
+import { useWorkout } from "@/context/WorkoutContext";
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<
   AppStackParamList,
@@ -16,6 +19,11 @@ export default function HomeScreen() {
   const { theme, themeMode, toggleTheme } = useTheme();
   const { state, dispatch } = useWorkout();
   const navigation = useNavigation<HomeScreenNavigationProp>();
+  const [selectedFilter, setSelectedFilter] = useState<ActivityType | "All">("All");
+
+  const filteredWorkouts = selectedFilter === "All"
+    ? state.workouts
+    : state.workouts.filter((workout) => workout.type === selectedFilter);
 
   const handleDelete = (id: string) => {
     dispatch({ type: "REMOVE_WORKOUT", payload: id });
@@ -66,18 +74,35 @@ export default function HomeScreen() {
           <Text style={[styles.emptyText, { color: theme.textSecondary }]}>No workouts yet. Add one to get started!</Text>
         </View>
       ) : (
-        <FlatList
-          style={styles.listContainer}
-          data={state.workouts}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <WorkoutCard
-              workout={item}
-              onPress={() => navigation.navigate("WorkoutDetails", { id: item.id })}
-              onDelete={() => handleDelete(item.id)}
+        <>
+          <WorkoutFilter
+            selectedType={selectedFilter}
+            onFilterChange={setSelectedFilter}
+          />
+          <Text style={[styles.resultCount, { color: theme.textSecondary }]}>
+            {filteredWorkouts.length} of {state.workouts.length} workout{filteredWorkouts.length !== 1 ? "s" : ""}
+          </Text>
+          {filteredWorkouts.length === 0 ? (
+            <View style={styles.emptyContainer}>
+              <Text style={[styles.emptyText, { color: theme.textSecondary }]}>
+                No workouts found for this type.
+              </Text>
+            </View>
+          ) : (
+            <FlatList
+              style={styles.listContainer}
+              data={filteredWorkouts}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <WorkoutCard
+                  workout={item}
+                  onPress={() => navigation.navigate("WorkoutDetails", { id: item.id })}
+                  onDelete={() => handleDelete(item.id)}
+                />
+              )}
             />
           )}
-        />
+        </>
       )}
 
       <View>
@@ -124,6 +149,10 @@ const styles = StyleSheet.create({
   },
   workoutCount: {
     fontSize: 14,
+  },
+  resultCount: {
+    fontSize: 12,
+    marginBottom: 12,
   },
   listContainer: {
     flex: 1,

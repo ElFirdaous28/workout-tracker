@@ -1,7 +1,8 @@
+import WorkoutForm from "@/components/WorkoutForm";
+import { useWorkout } from "@/context/WorkoutContext";
 import React from "react";
-import { View, ScrollView } from "react-native";
-import WorkoutForm from "../components/WorkoutForm";
-import { useWorkout } from "../context/WorkoutContext";
+import { ScrollView } from "react-native";
+
 
 export default function AddWorkoutScreen({ navigation }: any) {
   const { dispatch } = useWorkout();

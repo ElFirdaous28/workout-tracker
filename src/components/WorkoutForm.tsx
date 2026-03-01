@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { View, TextInput, TouchableOpacity, Text, StyleSheet, Alert } from "react-native";
-import { Workout, ActivityType, Intensity } from "../types/workout";
 import { useTheme } from "@/context/ThemeContext";
-import { Select } from "../components/Select";
+import { ActivityType, Intensity, Workout } from "@/types";
+import { Select } from "./Select";
 
 type Props = {
     onSubmit: (workout: Omit<Workout, "id">) => void;
