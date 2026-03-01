@@ -5,10 +5,10 @@ import { useTheme } from "@/context/ThemeContext";
 
 type Props = {
     selectedType: ActivityType | "All";
-    onFilterChange: (type: ActivityType | "All") => void;
+    onTypeChange: (type: ActivityType | "All") => void;
 };
 
-export default function WorkoutFilter({ selectedType, onFilterChange }: Props) {
+export default function WorkoutFilter({ selectedType, onTypeChange }: Props) {
     const { theme } = useTheme();
     const allTypes: (ActivityType | "All")[] = ["All", ...Object.values(ActivityType)];
 
@@ -30,7 +30,7 @@ export default function WorkoutFilter({ selectedType, onFilterChange }: Props) {
                                 borderColor: isSelected ? theme.primary : theme.border,
                             }
                         ]}
-                        onPress={() => onFilterChange(type)}
+                        onPress={() => onTypeChange(type)}
                         activeOpacity={0.7}
                     >
                         <Text

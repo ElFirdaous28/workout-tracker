@@ -19,11 +19,11 @@ export default function HomeScreen() {
   const { theme, themeMode, toggleTheme } = useTheme();
   const { state, dispatch } = useWorkout();
   const navigation = useNavigation<HomeScreenNavigationProp>();
-  const [selectedFilter, setSelectedFilter] = useState<ActivityType | "All">("All");
+  const [selectedTypeFilter, setSelectedTypeFilter] = useState<ActivityType | "All">("All");
 
-  const filteredWorkouts = selectedFilter === "All"
+  const filteredWorkouts = selectedTypeFilter === "All"
     ? state.workouts
-    : state.workouts.filter((workout) => workout.type === selectedFilter);
+    : state.workouts.filter((workout) => workout.type === selectedTypeFilter);
 
   const handleDelete = (id: string) => {
     dispatch({ type: "REMOVE_WORKOUT", payload: id });
@@ -76,8 +76,8 @@ export default function HomeScreen() {
       ) : (
         <>
           <WorkoutFilter
-            selectedType={selectedFilter}
-            onFilterChange={setSelectedFilter}
+            selectedType={selectedTypeFilter}
+            onTypeChange={setSelectedTypeFilter}
           />
           <Text style={[styles.resultCount, { color: theme.textSecondary }]}>
             {filteredWorkouts.length} of {state.workouts.length} workout{filteredWorkouts.length !== 1 ? "s" : ""}
