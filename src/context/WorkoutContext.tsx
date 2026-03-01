@@ -1,4 +1,4 @@
-import React, { createContext, useReducer, useEffect, Children, ReactNode } from "react";
+import React, { createContext, useReducer, useEffect, Children, ReactNode, useContext } from "react";
 import { Workout } from "@/types/workout";
 import { workoutStorage } from "@/storage/workoutStorage";
 
@@ -85,4 +85,13 @@ export const WorkoutProvider = ({ children }: { children: ReactNode }) => {
             {children}
         </WorkoutContext.Provider>
     )
+}
+
+// Custom hook for using WorkoutContext
+export const useWorkout = () => {
+    const context = useContext(WorkoutContext);
+    if (!context) {
+        throw new Error("useWorkout must be used within a WorkoutProvider");
+    }
+    return context;
 }

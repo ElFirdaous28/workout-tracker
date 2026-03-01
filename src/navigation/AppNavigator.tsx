@@ -16,12 +16,13 @@ export default function AppNavigator() {
                 screenOptions={{
                     headerTitleAlign: "center",
                     headerStyle: {
-                        backgroundColor: colors.surface,
+                        backgroundColor: colors.primary,
                     },
-                    headerTintColor: colors.primary,
+                    headerTintColor: "#ffffff",
                     headerTitleStyle: {
-                        color: colors.textPrimary,
+                        color: "#ffffff",
                         fontWeight: "bold",
+                        fontSize: 18,
                     },
                     contentStyle: {
                         backgroundColor: colors.background,

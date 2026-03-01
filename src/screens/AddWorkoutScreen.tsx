@@ -1,10 +1,10 @@
-import React, { useContext } from "react";
+import React from "react";
 import { View, ScrollView } from "react-native";
 import WorkoutForm from "../components/WorkoutForm";
-import { WorkoutContext } from "../context/WorkoutContext";
+import { useWorkout } from "../context/WorkoutContext";
 
 export default function AddWorkoutScreen({ navigation }: any) {
-  const { dispatch } = useContext(WorkoutContext);
+  const { dispatch } = useWorkout();
 
   const handleAddWorkout = (workoutData: any) => {
     const newWorkout = { ...workoutData, id: Date.now().toString(), };

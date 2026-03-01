@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Alert } from "react-native";
-import React, { useContext } from "react";
-import { WorkoutContext } from "@/context/WorkoutContext";
+import React from "react";
+import { useWorkout } from "@/context/WorkoutContext";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { AppStackParamList } from "@/types";
@@ -11,7 +11,7 @@ type WorkoutDetailsRouteProp = RouteProp<AppStackParamList, "WorkoutDetails">;
 type WorkoutDetailsNavigationProp = NativeStackNavigationProp<AppStackParamList, "WorkoutDetails">;
 
 const WorkoutDetailsScreen = () => {
-  const { state, dispatch } = useContext(WorkoutContext);
+  const { state, dispatch } = useWorkout();
   const route = useRoute<WorkoutDetailsRouteProp>();
   const navigation = useNavigation<WorkoutDetailsNavigationProp>();
   const { id } = route.params;

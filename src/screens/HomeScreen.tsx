@@ -1,6 +1,5 @@
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert } from "react-native";
-import { useContext } from "react";
-import { WorkoutContext } from "../context/WorkoutContext";
+import { useWorkout } from "../context/WorkoutContext";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { AppStackParamList } from "@/types";
@@ -13,7 +12,7 @@ type HomeScreenNavigationProp = NativeStackNavigationProp<
 >;
 
 export default function HomeScreen() {
-  const { state, dispatch } = useContext(WorkoutContext);
+  const { state, dispatch } = useWorkout();
   const navigation = useNavigation<HomeScreenNavigationProp>();
 
   const handleDelete = (id: string) => {
@@ -66,21 +65,21 @@ export default function HomeScreen() {
         />
       )}
 
-      <View style={styles.buttonContainer}>
+      <View>
         <TouchableOpacity
           style={styles.addButton}
           onPress={() => navigation.navigate("AddWorkout")}
-          activeOpacity={0.7}
-        >
+          activeOpacity={0.7}>
+
           <Text style={styles.addButtonText}>+ Add Workout</Text>
         </TouchableOpacity>
-        
+
         {state.workouts.length > 0 && (
           <TouchableOpacity
             style={styles.clearButton}
             onPress={handleClearAll}
-            activeOpacity={0.7}
-          >
+            activeOpacity={0.7}>
+
             <Text style={styles.clearButtonText}>Delete All</Text>
           </TouchableOpacity>
         )}
@@ -92,7 +91,6 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
     padding: 16,
   },
   header: {
@@ -121,9 +119,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.textSecondary,
   },
-  buttonContainer: {
-    paddingBottom: 8,
-  },
+
   addButton: {
     backgroundColor: colors.primary,
     borderRadius: 12,
@@ -138,7 +134,6 @@ const styles = StyleSheet.create({
   },
   clearButton: {
     marginTop: 12,
-    marginBottom: 30,
     borderWidth: 1,
     borderColor: colors.error,
     borderRadius: 12,
