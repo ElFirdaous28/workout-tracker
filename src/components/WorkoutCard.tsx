@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Workout } from "@/types/workout";
-import { colors } from "@/theme/colors";
+import { useTheme } from "@/context/ThemeContext";
 
 interface WorkoutCardProps {
   workout: Workout;
@@ -10,18 +10,19 @@ interface WorkoutCardProps {
 }
 
 export default function WorkoutCard({ workout, onPress, onDelete }: WorkoutCardProps) {
+  const { theme } = useTheme();
   const CardWrapper = onPress ? TouchableOpacity : View;
 
   return (
     <CardWrapper
-      style={styles.workoutCard}
+      style={[styles.workoutCard, { backgroundColor: theme.surface, borderLeftColor: theme.primary }]}
       onPress={onPress}
       activeOpacity={onPress ? 0.7 : 1}
     >
       <View style={styles.cardContent}>
         <View style={styles.cardInfo}>
-          <Text style={styles.cardType}>{workout.type}</Text>
-          <Text style={styles.cardDetails}>
+          <Text style={[styles.cardType, { color: theme.primary }]}>{workout.type}</Text>
+          <Text style={[styles.cardDetails, { color: theme.textSecondary }]}>
             Duration: {workout.duration} minutes{"\n"}
             Intensity: {workout.intensity}
           </Text>
@@ -32,7 +33,7 @@ export default function WorkoutCard({ workout, onPress, onDelete }: WorkoutCardP
             onPress={onDelete}
             activeOpacity={0.6}
           >
-            <Ionicons name="trash-outline" size={20} color={colors.error} />
+            <Ionicons name="trash-outline" size={20} color={theme.error} />
           </TouchableOpacity>
         )}
       </View>
@@ -42,12 +43,10 @@ export default function WorkoutCard({ workout, onPress, onDelete }: WorkoutCardP
 
 const styles = StyleSheet.create({
   workoutCard: {
-    backgroundColor: colors.surface,
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,
     borderLeftWidth: 4,
-    borderLeftColor: colors.primary,
   },
   cardContent: {
     flexDirection: "row",
@@ -60,12 +59,10 @@ const styles = StyleSheet.create({
   cardType: {
     fontSize: 18,
     fontWeight: "600",
-    color: colors.primary,
     marginBottom: 8,
   },
   cardDetails: {
     fontSize: 14,
-    color: colors.textSecondary,
     lineHeight: 20,
   },
   deleteButton: {

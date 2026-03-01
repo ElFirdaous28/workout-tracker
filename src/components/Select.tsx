@@ -8,7 +8,7 @@ import {
     StyleSheet,
     Pressable,
 } from "react-native";
-import { colors } from "../theme/colors";
+import { useTheme } from "@/context/ThemeContext";
 
 type Props<T> = {
     label: string;
@@ -23,17 +23,18 @@ export function Select<T extends string>({
     options,
     onSelect,
 }: Props<T>) {
+    const { theme } = useTheme();
     const [visible, setVisible] = useState(false);
 
     return (
         <>
-            <Text style={styles.label}>{label}</Text>
+            <Text style={[styles.label, { color: theme.textSecondary }]}>{label}</Text>
 
             <TouchableOpacity
-                style={styles.selectBox}
+                style={[styles.selectBox, { borderColor: theme.border, backgroundColor: theme.background }]}
                 onPress={() => setVisible(true)}
             >
-                <Text style={styles.valueText}>{value}</Text>
+                <Text style={[styles.valueText, { color: theme.textPrimary }]}>{value}</Text>
             </TouchableOpacity>
 
             <Modal transparent animationType="fade" visible={visible}>
@@ -41,7 +42,7 @@ export function Select<T extends string>({
                     style={styles.overlay}
                     onPress={() => setVisible(false)}
                 >
-                    <View style={styles.modalContent}>
+                    <View style={[styles.modalContent, { backgroundColor: theme.surface, borderColor: theme.border }]}>
                         <FlatList
                             data={options}
                             keyExtractor={(item) => item}
@@ -53,7 +54,7 @@ export function Select<T extends string>({
                                         setVisible(false);
                                     }}
                                 >
-                                    <Text style={styles.optionText}>{item}</Text>
+                                    <Text style={[styles.optionText, { color: theme.textPrimary }]}>{item}</Text>
                                 </TouchableOpacity>
                             )}
                         />
@@ -66,7 +67,6 @@ export function Select<T extends string>({
 
 const styles = StyleSheet.create({
     label: {
-        color: colors.textSecondary,
         marginTop: 14,
         marginBottom: 6,
         fontSize: 13,
@@ -74,14 +74,11 @@ const styles = StyleSheet.create({
 
     selectBox: {
         borderWidth: 1,
-        borderColor: colors.border,
-        backgroundColor: colors.background,
         padding: 14,
         borderRadius: 8,
     },
 
     valueText: {
-        color: colors.textPrimary,
         fontSize: 14,
     },
 
@@ -93,10 +90,8 @@ const styles = StyleSheet.create({
     },
 
     modalContent: {
-        backgroundColor: colors.surface,
         borderRadius: 12,
         borderWidth: 1,
-        borderColor: colors.border,
     },
 
     option: {
@@ -104,7 +99,6 @@ const styles = StyleSheet.create({
     },
 
     optionText: {
-        color: colors.textPrimary,
         fontSize: 15,
     },
 });

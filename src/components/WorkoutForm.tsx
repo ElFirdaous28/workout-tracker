@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, TextInput, TouchableOpacity, Text, StyleSheet } from "react-native";
 import { Workout, ActivityType, Intensity } from "../types/workout";
-import { colors } from "../theme/colors";
+import { useTheme } from "@/context/ThemeContext";
 import { Select } from "../components/Select";
 
 type Props = {
@@ -9,6 +9,7 @@ type Props = {
 };
 
 export default function WorkoutForm({ onSubmit }: Props) {
+    const { theme } = useTheme();
     const [type, setType] = useState<ActivityType>(ActivityType.Running);
     const [duration, setDuration] = useState("");
     const [intensity, setIntensity] = useState<Intensity>(Intensity.Medium);
@@ -32,7 +33,7 @@ export default function WorkoutForm({ onSubmit }: Props) {
     };
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, { backgroundColor: theme.surface, borderColor: theme.border }]}>
             <Select
                 label="Type"
                 value={type}
@@ -40,12 +41,12 @@ export default function WorkoutForm({ onSubmit }: Props) {
                 onSelect={(val) => setType(val as ActivityType)}
             />
 
-            <Text style={styles.label}>Duration (min)</Text>
+            <Text style={[styles.label, { color: theme.textSecondary }]}>Duration (min)</Text>
             <TextInput
                 keyboardType="numeric"
                 value={duration}
                 onChangeText={setDuration}
-                style={styles.input}
+                style={[styles.input, { borderColor: theme.border, backgroundColor: theme.background, color: theme.textPrimary }]}
             />
 
             <Select
@@ -55,16 +56,16 @@ export default function WorkoutForm({ onSubmit }: Props) {
                 onSelect={(val) => setIntensity(val as Intensity)}
             />
 
-            <Text style={styles.label}>Notes</Text>
+            <Text style={[styles.label, { color: theme.textSecondary }]}>Notes</Text>
             <TextInput
                 value={notes}
                 onChangeText={setNotes}
                 placeholder="Optional"
-                placeholderTextColor={colors.textSecondary}
-                style={styles.input}
+                placeholderTextColor={theme.textSecondary}
+                style={[styles.input, { borderColor: theme.border, backgroundColor: theme.background, color: theme.textPrimary }]}
             />
 
-            <TouchableOpacity onPress={handleSubmit} style={styles.button}>
+            <TouchableOpacity onPress={handleSubmit} style={[styles.button, { backgroundColor: theme.primary }]}>
                 <Text style={styles.buttonText}>Add Workout</Text>
             </TouchableOpacity>
         </View>
@@ -74,14 +75,11 @@ export default function WorkoutForm({ onSubmit }: Props) {
 const styles = StyleSheet.create({
     container: {
         padding: 20,
-        backgroundColor: colors.surface,
         borderRadius: 12,
         borderWidth: 1,
-        borderColor: colors.border,
     },
 
     label: {
-        color: colors.textSecondary,
         marginTop: 14,
         marginBottom: 6,
         fontSize: 13,
@@ -90,21 +88,16 @@ const styles = StyleSheet.create({
 
     input: {
         borderWidth: 1,
-        borderColor: colors.border,
-        backgroundColor: colors.background,
         padding: 12,
         borderRadius: 8,
-        color: colors.textPrimary,
         fontSize: 14,
     },
 
     button: {
-        backgroundColor: colors.primary,
         paddingVertical: 14,
         borderRadius: 10,
         marginTop: 20,
         alignItems: "center",
-        shadowColor: colors.primary,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.3,
         shadowRadius: 6,

@@ -1,9 +1,10 @@
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { useWorkout } from "../context/WorkoutContext";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { AppStackParamList } from "@/types";
-import { colors } from "@/theme/colors";
+import { useTheme } from "@/context/ThemeContext";
 import WorkoutCard from "@/components/WorkoutCard";
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<
@@ -12,6 +13,7 @@ type HomeScreenNavigationProp = NativeStackNavigationProp<
 >;
 
 export default function HomeScreen() {
+  const { theme, themeMode, toggleTheme } = useTheme();
   const { state, dispatch } = useWorkout();
   const navigation = useNavigation<HomeScreenNavigationProp>();
 
@@ -40,15 +42,28 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>My Workouts</Text>
-        <Text style={styles.workoutCount}>
-          {state.workouts.length} workout{state.workouts.length !== 1 ? "s" : ""}
-        </Text>
+        <View>
+          <Text style={[styles.title, { color: theme.textPrimary }]}>My Workouts</Text>
+          <Text style={[styles.workoutCount, { color: theme.textSecondary }]}>
+            {state.workouts.length} workout{state.workouts.length !== 1 ? "s" : ""}
+          </Text>
+        </View>
+        <TouchableOpacity
+          onPress={toggleTheme}
+          style={styles.themeToggle}
+          activeOpacity={0.7}
+        >
+          <Ionicons 
+            name={themeMode === "dark" ? "sunny" : "moon"} 
+            size={24} 
+            color={theme.primary} 
+          />
+        </TouchableOpacity>
       </View>
 
       {state.workouts.length === 0 ? (
         <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>No workouts yet. Add one to get started!</Text>
+          <Text style={[styles.emptyText, { color: theme.textSecondary }]}>No workouts yet. Add one to get started!</Text>
         </View>
       ) : (
         <FlatList
@@ -67,20 +82,20 @@ export default function HomeScreen() {
 
       <View>
         <TouchableOpacity
-          style={styles.addButton}
+          style={[styles.addButton, { backgroundColor: theme.primary }]}
           onPress={() => navigation.navigate("AddWorkout")}
           activeOpacity={0.7}>
 
-          <Text style={styles.addButtonText}>+ Add Workout</Text>
+          <Text style={[styles.addButtonText, { color: theme.background }]}>+ Add Workout</Text>
         </TouchableOpacity>
 
         {state.workouts.length > 0 && (
           <TouchableOpacity
-            style={styles.clearButton}
+            style={[styles.clearButton, { borderColor: theme.error }]}
             onPress={handleClearAll}
             activeOpacity={0.7}>
 
-            <Text style={styles.clearButtonText}>Delete All</Text>
+            <Text style={[styles.clearButtonText, { color: theme.error }]}>Delete All</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -95,16 +110,20 @@ const styles = StyleSheet.create({
   },
   header: {
     marginBottom: 24,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  themeToggle: {
+    padding: 8,
   },
   title: {
     fontSize: 28,
     fontWeight: "bold",
-    color: colors.textPrimary,
     marginBottom: 4,
   },
   workoutCount: {
     fontSize: 14,
-    color: colors.textSecondary,
   },
   listContainer: {
     flex: 1,
@@ -117,11 +136,9 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 16,
-    color: colors.textSecondary,
   },
 
   addButton: {
-    backgroundColor: colors.primary,
     borderRadius: 12,
     padding: 16,
     alignItems: "center",
@@ -130,12 +147,10 @@ const styles = StyleSheet.create({
   addButtonText: {
     fontSize: 16,
     fontWeight: "600",
-    color: colors.background,
   },
   clearButton: {
     marginTop: 12,
     borderWidth: 1,
-    borderColor: colors.error,
     borderRadius: 12,
     padding: 12,
     alignItems: "center",
@@ -144,6 +159,5 @@ const styles = StyleSheet.create({
   clearButtonText: {
     fontSize: 14,
     fontWeight: "500",
-    color: colors.error,
   },
 });

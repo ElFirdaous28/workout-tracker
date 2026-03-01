@@ -5,18 +5,20 @@ import HomeScreen from "@/screens/HomeScreen";
 import AddWorkoutScreen from "@/screens/AddWorkoutScreen";
 import WorkoutDetailsScreen from "@/screens/WorkoutDetailsScreen";
 import { AppStackParamList } from "@/types";
-import { colors } from "@/theme/colors";
+import { useTheme } from "@/context/ThemeContext";
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
 
 export default function AppNavigator() {
+    const { theme } = useTheme();
+
     return (
         <NavigationContainer>
             <Stack.Navigator
                 screenOptions={{
                     headerTitleAlign: "center",
                     headerStyle: {
-                        backgroundColor: colors.primary,
+                        backgroundColor: theme.primary,
                     },
                     headerTintColor: "#ffffff",
                     headerTitleStyle: {
@@ -25,7 +27,7 @@ export default function AppNavigator() {
                         fontSize: 18,
                     },
                     contentStyle: {
-                        backgroundColor: colors.background,
+                        backgroundColor: theme.background,
                     },
                 }}
             >

@@ -4,13 +4,14 @@ import { useWorkout } from "@/context/WorkoutContext";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { AppStackParamList } from "@/types";
-import { colors } from "@/theme/colors";
+import { useTheme } from "@/context/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
 
 type WorkoutDetailsRouteProp = RouteProp<AppStackParamList, "WorkoutDetails">;
 type WorkoutDetailsNavigationProp = NativeStackNavigationProp<AppStackParamList, "WorkoutDetails">;
 
 const WorkoutDetailsScreen = () => {
+  const { theme } = useTheme();
   const { state, dispatch } = useWorkout();
   const route = useRoute<WorkoutDetailsRouteProp>();
   const navigation = useNavigation<WorkoutDetailsNavigationProp>();
@@ -20,10 +21,10 @@ const WorkoutDetailsScreen = () => {
 
   if (!workout) {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor: theme.background }]}>
         <View style={styles.errorContainer}>
-          <Ionicons name="warning-outline" size={48} color={colors.error} />
-          <Text style={styles.errorText}>Workout not found</Text>
+          <Ionicons name="warning-outline" size={48} color={theme.error} />
+          <Text style={[styles.errorText, { color: theme.textSecondary }]}>Workout not found</Text>
         </View>
       </View>
     );
@@ -61,50 +62,50 @@ const WorkoutDetailsScreen = () => {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={[styles.container, { backgroundColor: theme.background }]}>
       <View style={styles.content}>
         {/* Header Card */}
-        <View style={styles.headerCard}>
+        <View style={[styles.headerCard, { backgroundColor: theme.surface, borderLeftColor: theme.primary }]}>
           <View style={styles.typeContainer}>
-            <Ionicons name="fitness" size={32} color={colors.primary} />
-            <Text style={styles.workoutType}>{workout.type}</Text>
+            <Ionicons name="fitness" size={32} color={theme.primary} />
+            <Text style={[styles.workoutType, { color: theme.textPrimary }]}>{workout.type}</Text>
           </View>
-          <View style={styles.intensityBadge}>
-            <Text style={styles.intensityText}>{workout.intensity.toUpperCase()}</Text>
+          <View style={[styles.intensityBadge, { backgroundColor: theme.primaryMuted, borderColor: theme.primaryBorder }]}>
+            <Text style={[styles.intensityText, { color: theme.primary }]}>{workout.intensity.toUpperCase()}</Text>
           </View>
         </View>
 
         {/* Details Section */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Details</Text>
+          <Text style={[styles.sectionTitle, { color: theme.textPrimary }]}>Details</Text>
           
-          <View style={styles.detailRow}>
-            <View style={styles.detailIconContainer}>
-              <Ionicons name="time-outline" size={24} color={colors.primary} />
+          <View style={[styles.detailRow, { backgroundColor: theme.surface }]}>
+            <View style={[styles.detailIconContainer, { backgroundColor: theme.primaryMuted }]}>
+              <Ionicons name="time-outline" size={24} color={theme.primary} />
             </View>
             <View style={styles.detailContent}>
-              <Text style={styles.detailLabel}>Duration</Text>
-              <Text style={styles.detailValue}>{workout.duration} minutes</Text>
+              <Text style={[styles.detailLabel, { color: theme.textSecondary }]}>Duration</Text>
+              <Text style={[styles.detailValue, { color: theme.textPrimary }]}>{workout.duration} minutes</Text>
             </View>
           </View>
 
-          <View style={styles.detailRow}>
-            <View style={styles.detailIconContainer}>
-              <Ionicons name="calendar-outline" size={24} color={colors.primary} />
+          <View style={[styles.detailRow, { backgroundColor: theme.surface }]}>
+            <View style={[styles.detailIconContainer, { backgroundColor: theme.primaryMuted }]}>
+              <Ionicons name="calendar-outline" size={24} color={theme.primary} />
             </View>
             <View style={styles.detailContent}>
-              <Text style={styles.detailLabel}>Date</Text>
-              <Text style={styles.detailValue}>{formatDate(workout.date)}</Text>
+              <Text style={[styles.detailLabel, { color: theme.textSecondary }]}>Date</Text>
+              <Text style={[styles.detailValue, { color: theme.textPrimary }]}>{formatDate(workout.date)}</Text>
             </View>
           </View>
 
-          <View style={styles.detailRow}>
-            <View style={styles.detailIconContainer}>
-              <Ionicons name="speedometer-outline" size={24} color={colors.primary} />
+          <View style={[styles.detailRow, { backgroundColor: theme.surface }]}>
+            <View style={[styles.detailIconContainer, { backgroundColor: theme.primaryMuted }]}>
+              <Ionicons name="speedometer-outline" size={24} color={theme.primary} />
             </View>
             <View style={styles.detailContent}>
-              <Text style={styles.detailLabel}>Intensity</Text>
-              <Text style={styles.detailValue}>{workout.intensity}</Text>
+              <Text style={[styles.detailLabel, { color: theme.textSecondary }]}>Intensity</Text>
+              <Text style={[styles.detailValue, { color: theme.textPrimary }]}>{workout.intensity}</Text>
             </View>
           </View>
         </View>
@@ -112,21 +113,21 @@ const WorkoutDetailsScreen = () => {
         {/* Notes Section */}
         {workout.notes && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Notes</Text>
-            <View style={styles.notesContainer}>
-              <Text style={styles.notesText}>{workout.notes}</Text>
+            <Text style={[styles.sectionTitle, { color: theme.textPrimary }]}>Notes</Text>
+            <View style={[styles.notesContainer, { backgroundColor: theme.surface }]}>
+              <Text style={[styles.notesText, { color: theme.textPrimary }]}>{workout.notes}</Text>
             </View>
           </View>
         )}
 
         {/* Delete Button */}
         <TouchableOpacity
-          style={styles.deleteButton}
+          style={[styles.deleteButton, { borderColor: theme.error }]}
           onPress={handleDelete}
           activeOpacity={0.7}
         >
-          <Ionicons name="trash-outline" size={20} color={colors.error} />
-          <Text style={styles.deleteButtonText}>Delete Workout</Text>
+          <Ionicons name="trash-outline" size={20} color={theme.error} />
+          <Text style={[styles.deleteButtonText, { color: theme.error }]}>Delete Workout</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -138,7 +139,6 @@ export default WorkoutDetailsScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
   },
   content: {
     padding: 16,
@@ -151,16 +151,13 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: 18,
-    color: colors.textSecondary,
     marginTop: 16,
   },
   headerCard: {
-    backgroundColor: colors.surface,
     borderRadius: 16,
     padding: 24,
     marginBottom: 24,
     borderLeftWidth: 6,
-    borderLeftColor: colors.primary,
   },
   typeContainer: {
     flexDirection: "row",
@@ -170,22 +167,18 @@ const styles = StyleSheet.create({
   workoutType: {
     fontSize: 28,
     fontWeight: "bold",
-    color: colors.textPrimary,
     marginLeft: 12,
   },
   intensityBadge: {
     alignSelf: "flex-start",
-    backgroundColor: colors.primaryMuted,
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: colors.primaryBorder,
   },
   intensityText: {
     fontSize: 12,
     fontWeight: "600",
-    color: colors.primary,
   },
   section: {
     marginBottom: 24,
@@ -193,13 +186,11 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: "600",
-    color: colors.textPrimary,
     marginBottom: 16,
   },
   detailRow: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: colors.surface,
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,
@@ -208,7 +199,6 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 8,
-    backgroundColor: colors.primaryMuted,
     justifyContent: "center",
     alignItems: "center",
     marginRight: 16,
@@ -218,22 +208,18 @@ const styles = StyleSheet.create({
   },
   detailLabel: {
     fontSize: 12,
-    color: colors.textSecondary,
     marginBottom: 4,
   },
   detailValue: {
     fontSize: 16,
     fontWeight: "500",
-    color: colors.textPrimary,
   },
   notesContainer: {
-    backgroundColor: colors.surface,
     borderRadius: 12,
     padding: 16,
   },
   notesText: {
     fontSize: 15,
-    color: colors.textPrimary,
     lineHeight: 22,
   },
   deleteButton: {
@@ -241,7 +227,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 1,
-    borderColor: colors.error,
     borderRadius: 12,
     padding: 16,
     marginTop: 8,
@@ -250,7 +235,6 @@ const styles = StyleSheet.create({
   deleteButtonText: {
     fontSize: 16,
     fontWeight: "500",
-    color: colors.error,
     marginLeft: 8,
   },
 });
