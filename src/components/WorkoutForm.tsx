@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, TextInput, TouchableOpacity, Text, StyleSheet } from "react-native";
+import { View, TextInput, TouchableOpacity, Text, StyleSheet, Alert } from "react-native";
 import { Workout, ActivityType, Intensity } from "../types/workout";
 import { useTheme } from "@/context/ThemeContext";
 import { Select } from "../components/Select";
@@ -14,8 +14,33 @@ export default function WorkoutForm({ onSubmit }: Props) {
     const [duration, setDuration] = useState("");
     const [intensity, setIntensity] = useState<Intensity>(Intensity.Medium);
     const [notes, setNotes] = useState("");
+    const [errors, setErrors] = useState<{ duration?: string }>({});
+
+    const validateForm = (): boolean => {
+        const newErrors: { duration?: string } = {};
+
+        if (!duration.trim()) {
+            newErrors.duration = "Duration is required";
+        } else {
+            const durationNum = Number(duration);
+            if (isNaN(durationNum)) {
+                newErrors.duration = "Duration must be a valid number";
+            } else if (durationNum <= 0) {
+                newErrors.duration = "Duration must be greater than 0";
+            } else if (durationNum > 60) {
+                newErrors.duration = "Duration cannot exceed 60 minutes (1 hour)";
+            }
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
 
     const handleSubmit = () => {
+        if (!validateForm()) {
+            return;
+        }
+
         const workout: Omit<Workout, "id"> = {
             type,
             duration: Number(duration),
@@ -30,6 +55,7 @@ export default function WorkoutForm({ onSubmit }: Props) {
         setNotes("");
         setType(ActivityType.Running);
         setIntensity(Intensity.Medium);
+        setErrors({});
     };
 
     return (
@@ -46,8 +72,20 @@ export default function WorkoutForm({ onSubmit }: Props) {
                 keyboardType="numeric"
                 value={duration}
                 onChangeText={setDuration}
-                style={[styles.input, { borderColor: theme.border, backgroundColor: theme.background, color: theme.textPrimary }]}
+                style={[
+                    styles.input,
+                    {
+                        borderColor: errors.duration ? theme.error : theme.border,
+                        backgroundColor: theme.background,
+                        color: theme.textPrimary,
+                    }
+                ]}
             />
+            {errors.duration && (
+                <Text style={[styles.errorText, { color: theme.error }]}>
+                    {errors.duration}
+                </Text>
+            )}
 
             <Select
                 label="Intensity"
@@ -91,6 +129,12 @@ const styles = StyleSheet.create({
         padding: 12,
         borderRadius: 8,
         fontSize: 14,
+    },
+
+    errorText: {
+        fontSize: 12,
+        marginTop: 4,
+        fontWeight: "500",
     },
 
     button: {
