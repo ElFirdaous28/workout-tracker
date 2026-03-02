@@ -13,6 +13,16 @@ export default function WorkoutCard({ workout, onPress, onDelete }: WorkoutCardP
   const { theme } = useTheme();
   const CardWrapper = onPress ? TouchableOpacity : View;
 
+  const formatDate = (isoDate: string) => {
+    const date = new Date(isoDate);
+    return date.toLocaleDateString('en-US', { 
+      weekday: "short",
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric' 
+    });
+  };
+
   return (
     <CardWrapper
       style={[styles.workoutCard, { backgroundColor: theme.surface, borderLeftColor: theme.primary }]}
@@ -23,6 +33,7 @@ export default function WorkoutCard({ workout, onPress, onDelete }: WorkoutCardP
         <View style={styles.cardInfo}>
           <Text style={[styles.cardType, { color: theme.primary }]}>{workout.type}</Text>
           <Text style={[styles.cardDetails, { color: theme.textSecondary }]}>
+            {formatDate(workout.date)}{"\n"}
             Duration: {workout.duration} minutes{"\n"}
             Intensity: {workout.intensity}
           </Text>

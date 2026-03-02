@@ -13,11 +13,67 @@ export default function WorkoutForm({ onSubmit }: Props) {
     const [type, setType] = useState<ActivityType>(ActivityType.Running);
     const [duration, setDuration] = useState("");
     const [intensity, setIntensity] = useState<Intensity>(Intensity.Medium);
+    const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
     const [notes, setNotes] = useState("");
-    const [errors, setErrors] = useState<{ duration?: string }>({});
+    const [errors, setErrors] = useState<{ duration?: string; date?: string }>({});
+
+    const formatDate = (input: string): string => {
+        // Remove non-numeric characters
+        const cleaned = input.replace(/\D/g, "");
+
+        // Apply YYYY-MM-DD format automatically with leading zeros for single digits 1-9
+        if (cleaned.length <= 4) {
+            return cleaned; // YYYY
+        } else if (cleaned.length <= 6) {
+            const year = cleaned.slice(0, 4);
+            const monthStr = cleaned.slice(4);
+            const monthNum = parseInt(monthStr, 10);
+            // Pad only if single digit between 1-9
+            const month = monthNum > 0 && monthNum < 10 && monthStr.length === 1 ? monthStr.padStart(2, "0") : monthStr;
+            return `${year}-${month}`;
+        } else {
+            const year = cleaned.slice(0, 4);
+            const monthStr = cleaned.slice(4, 6);
+            const dayStr = cleaned.slice(6, 8);
+            const monthNum = parseInt(monthStr, 10);
+            const dayNum = parseInt(dayStr, 10);
+            // Pad only if single digit between 1-9
+            const month = monthNum > 0 && monthNum < 10 && monthStr.length === 1 ? monthStr.padStart(2, "0") : monthStr;
+            const day = dayNum > 0 && dayNum < 10 && dayStr.length === 1 ? dayStr.padStart(2, "0") : dayStr;
+            return `${year}-${month}-${day}`;
+        }
+    };
+
+    const validateDate = (dateStr: string): string | undefined => {
+        if (!dateStr.trim()) {
+            return "Date is required";
+        }
+
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!dateRegex.test(dateStr)) {
+            return "Date must be in YYYY-MM-DD format";
+        }
+
+        const [year, month, day] = dateStr.split("-").map(Number);
+
+        if (month < 1 || month > 12) {
+            return "Month must be between 01 and 12";
+        }
+
+        if (day < 1 || day > 31) {
+            return "Day must be between 01 and 31";
+        }
+
+        const parsedDate = new Date(year, month - 1, day);
+        if (parsedDate.getFullYear() !== year || parsedDate.getMonth() !== month - 1 || parsedDate.getDate() !== day) {
+            return "Invalid date for the given month";
+        }
+
+        return undefined;
+    };
 
     const validateForm = (): boolean => {
-        const newErrors: { duration?: string } = {};
+        const newErrors: { duration?: string; date?: string } = {};
 
         if (!duration.trim()) {
             newErrors.duration = "Duration is required";
@@ -30,6 +86,11 @@ export default function WorkoutForm({ onSubmit }: Props) {
             } else if (durationNum > 60) {
                 newErrors.duration = "Duration cannot exceed 60 minutes (1 hour)";
             }
+        }
+
+        const dateError = validateDate(date);
+        if (dateError) {
+            newErrors.date = dateError;
         }
 
         setErrors(newErrors);
@@ -45,7 +106,7 @@ export default function WorkoutForm({ onSubmit }: Props) {
             type,
             duration: Number(duration),
             intensity,
-            date: new Date().toISOString(),
+            date: new Date(date).toISOString(),
             notes: notes || undefined,
         };
 
@@ -93,6 +154,35 @@ export default function WorkoutForm({ onSubmit }: Props) {
                 options={Object.values(Intensity)}
                 onSelect={(val) => setIntensity(val as Intensity)}
             />
+
+            <Text style={[styles.label, { color: theme.textSecondary }]}>
+                Date (YYYY-MM-DD)
+            </Text>
+
+            <TextInput
+                value={date}
+                onChangeText={(text) => {
+                    const formatted = formatDate(text);
+                    setDate(formatted);
+                    const dateError = validateDate(formatted);
+                    setErrors(prev => ({ ...prev, date: dateError }));
+                }}
+                placeholder="YYYY-MM-DD"
+                placeholderTextColor={theme.textSecondary}
+                style={[
+                    styles.input,
+                    {
+                        borderColor: errors.date ? theme.error : theme.border,
+                        backgroundColor: theme.background,
+                        color: theme.textPrimary,
+                    }
+                ]}
+            />
+            {errors.date && (
+                <Text style={[styles.errorText, { color: theme.error }]}>
+                    {errors.date}
+                </Text>
+            )}
 
             <Text style={[styles.label, { color: theme.textSecondary }]}>Notes</Text>
             <TextInput
