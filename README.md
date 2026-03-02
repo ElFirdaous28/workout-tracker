@@ -6,7 +6,8 @@ A React Native & Expo app to log, track, and review your workout sessions.
 
 ## 📱 Demo
 
-> 🎥 [Watch the demo video](./assets/demo/demo.mp4)
+> 🎥 Video too large to preview on GitHub.  
+> [Download or watch here](./assets/demo/demo_video.mp4)
 
 ---
 
