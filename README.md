@@ -9,6 +9,7 @@ A React Native & Expo app to log, track, and review your workout sessions.
 <video src="https://github.com/ElFirdaous28/workout-tracker/raw/dev/assets/demo/demo.mp4" controls="controls" style="max-width: 480px;">
   Your browser does not support the video tag.
 </video>
+
 ---
 
 ## ✨ Features
