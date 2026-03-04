@@ -8,7 +8,7 @@ type Props = {
     onTypeChange: (type: ActivityType | "All") => void;
 };
 
-export default function TypeFilter({ selectedType, onTypeChange }: Props) {
+export default function WorkoutFilter({ selectedType, onTypeChange }: Props) {
     const { theme } = useTheme();
     const allTypes: (ActivityType | "All")[] = ["All", ...Object.values(ActivityType)];
 
