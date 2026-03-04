@@ -7,8 +7,8 @@ import { AppStackParamList } from "@/types";
 import { ActivityType } from "@/types/workout";
 import { useTheme } from "@/context/ThemeContext";
 import WorkoutCard from "@/components/WorkoutCard";
-import WorkoutFilter from "@/components/WorkoutFilter";
 import { useWorkout } from "@/context/WorkoutContext";
+import TypeFilter from "@/components/TypeFilter";
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<
   AppStackParamList,
@@ -75,7 +75,7 @@ export default function HomeScreen() {
         </View>
       ) : (
         <>
-          <WorkoutFilter
+          <TypeFilter
             selectedType={selectedTypeFilter}
             onTypeChange={setSelectedTypeFilter}
           />
