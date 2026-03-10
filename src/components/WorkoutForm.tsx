@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, TextInput, TouchableOpacity, Text, StyleSheet, Alert } from "react-native";
+import { View, TextInput, TouchableOpacity, Text, StyleSheet, Alert, Platform } from "react-native";
 import { useTheme } from "@/context/ThemeContext";
 import { ActivityType, Intensity, Workout } from "@/types";
 import { Select } from "./Select";
@@ -232,10 +232,15 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         marginTop: 20,
         alignItems: "center",
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 6,
         elevation: 4,
+        ...Platform.select({
+            web: { boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.3)" } as object,
+            default: {
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.3,
+                shadowRadius: 6,
+            },
+        }),
     },
 
     buttonText: {

@@ -1,5 +1,5 @@
 import { View, StyleSheet, StatusBar } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { WorkoutProvider } from "@/context/WorkoutContext";
 import { ThemeProvider, useTheme } from "@/context/ThemeContext";
 import AppNavigator from "@/navigation/AppNavigator";
@@ -25,11 +25,13 @@ function AppContent() {
 
 export default function App() {
   return (
-    <ThemeProvider>
-      <WorkoutProvider>
-        <AppContent />
-      </WorkoutProvider>
-    </ThemeProvider>
+    <SafeAreaProvider>
+      <ThemeProvider>
+        <WorkoutProvider>
+          <AppContent />
+        </WorkoutProvider>
+      </ThemeProvider>
+    </SafeAreaProvider>
   );
 }
 
